@@ -17,7 +17,7 @@ Current Patterns include:
   
 *--------------------------------------------------------------------------------------------------------------------------------------*
 
-I wrote this code to replace some crummy code that the previous person at my school that created this project wrote.  This code is much more lightweight, uses less hardware, has a few extra features that the original didn't, has some extra security features and has a much better user interface allowing to change settings without reflashing the device.
+I wrote this code to replace some inefficient and un-user friendly code that the previous person at my school who created this project wrote.  This code is much more lightweight, uses less hardware, has a few extra features that the original didn't, has some extra security features and has a much better user interface allowing to change settings without reflashing the device.
 
 Features:
 *  Admin username and password so that the settings cannot be changed by anyone at random
