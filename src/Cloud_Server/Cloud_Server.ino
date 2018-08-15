@@ -1,7 +1,5 @@
 #include "Patterns.h"
-#include "Home.h"
-#include "Control.h"
-#include "Configure.h"
+#include "HTML.h"
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
 #include <WiFiManager.h>
@@ -35,7 +33,7 @@ int currentPattern = -1;
 long previousMillis = 0;
 long previousMillisDisplay = 0;
 long interval = 10000;
-long intervalDisplay = 60000;
+long intervalDisplay = 10000;
 int currentWeatherID = 0;
 boolean displayOn = true;
 boolean firstDisplay = true;
@@ -185,7 +183,6 @@ void setup() {
 
 void loop() {
   server.handleClient();
-  delay(10);
   ArduinoOTA.handle();
 
   unsigned long currentMillis = millis();
@@ -211,7 +208,7 @@ void loop() {
 
   lastButtonState = reading;
 
-  if (displayOn || firstDisplay) {
+  if (displayOn && firstDisplay) {
     if (firstDisplay) {
       firstDisplay = false;
       previousMillisDisplay = currentMillis;
@@ -228,6 +225,7 @@ void loop() {
     if (currentMillis - previousMillisDisplay > intervalDisplay) {
       display.clear();
       displayOn = false;
+      firstDisplay = true;
     }
   }
 
@@ -379,7 +377,7 @@ void handleNotFound() {
 }
 
 void handleRoot() {
-  String form = homePage;
+  String form = parseHomePage();
   setImage(currentPattern);
   form.replace("%CURRENT_PATTERN%", parseCurrentPattern());
   server.send(200, "text/html", form);  // Home webpage for the cloud
@@ -389,7 +387,7 @@ void handleConfigure() {
   if (!server.authenticate(www_username, www_password)) {
     return server.requestAuthentication();
   }
-  String form = configurePage;
+  String form = parseConfigurePage();
   form.replace("%USERID%", www_username);
   form.replace("%STATIONPASSWORD%", www_password);
   form.replace("%OTAPASSWORD%", OTA_Password);
@@ -401,7 +399,7 @@ void handleConfigure() {
 }
 
 void handleConfigureNoPassword() {
-  String form = configurePage;
+  String form = parseConfigurePage();
   form.replace("%USERID%", www_username);
   form.replace("%STATIONPASSWORD%", www_password);
   form.replace("%WEATHERKEY%", WeatherApiKey);
@@ -414,7 +412,7 @@ void handleControl() {
   if (!server.authenticate(www_username, www_password)) {
     return server.requestAuthentication();
   }
-  String form = controlPage;
+  String form = parseControlPage();
   form.replace ("%MODE%", parseCurrentMode());
 
   server.send(200, "text/html", form);  // Control page for the cloud
