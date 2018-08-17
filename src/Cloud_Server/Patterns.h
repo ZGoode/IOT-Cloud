@@ -26,7 +26,7 @@ int interval2 = 5;
 int interval3 = 20;
 int interval4 = 50;
 int interval5 = 100;
-int interval6;  //variable
+int interval6 = 200;
 
 int rainbowCycleLoop0 = 0;
 int sunriseLoop0 = 300;
@@ -54,8 +54,8 @@ void clearClouds() {
   Serial.println("CLEAR");
   for (int i = 0; i < NUMPIXELS; i++) {
     pixels.setPixelColor(i, pixels.Color(0, 0, 150));
-    pixels.show();
   }
+  pixels.show();
 }
 
 void rainbowCycle() {
@@ -403,7 +403,7 @@ void rain() {
 
   if (rainLoop0 < 15) {
     unsigned long currentMillis = millis();
-    if (currentMillis - previousMillisArray[9] > interval3) {
+    if (currentMillis - previousMillisArray[9] > interval6) {
       previousMillisArray[9] = currentMillis;
       for (int a = 0; a < NUMPIXELS; a++) {
         pixels.setPixelColor(a, 5, 5, 5); //set LEDs a gray color
