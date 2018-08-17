@@ -30,6 +30,19 @@ Features:
 
 *--------------------------------------------------------------------------------------------------------------------------------------*
 
+Libraries used:
+*  ESP8266Wifi
+*  ESP8266WebServer
+*  WiFiManager
+*  ESP8266mDNS
+*  ArduinoOTA
+*  FS.h
+*  SH1106Wire
+*  SSD1306Wire
+*  OLEDDisplayUi
+
+*--------------------------------------------------------------------------------------------------------------------------------------*
+
 Parts used in creating this:
 
 (Most of the parts here I already had sitting around, but here is a complete list of parts with links in case anyone wants to replicate this project)
