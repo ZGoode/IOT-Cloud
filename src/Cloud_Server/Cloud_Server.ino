@@ -1,15 +1,16 @@
-#include "Patterns.h"
-#include "HTML.h"
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
 #include <WiFiManager.h>
 #include <ESP8266mDNS.h>
 #include <ArduinoOTA.h>
-#include "OpenWeatherMapClient.h"
 #include "FS.h"
 #include "SH1106Wire.h"
 #include "SSD1306Wire.h"
 #include "OLEDDisplayUi.h"
+
+#include "Patterns.h"
+#include "HTML.h"
+#include "OpenWeatherMapClient.h"
 
 #define VERSION "1.0"
 #define HOSTNAME "Cloud"
@@ -32,7 +33,7 @@ int currentMode = 0;
 int currentPattern = -1;
 long previousMillis = 0;
 long previousMillisDisplay = 0;
-long interval = 10000;
+long interval = 1800000;
 long intervalDisplay = 10000;
 int currentWeatherID = 0;
 boolean displayOn = true;
@@ -185,6 +186,8 @@ void loop() {
   server.handleClient();
   ArduinoOTA.handle();
 
+  delay(1);
+
   unsigned long currentMillis = millis();
   if (currentMillis - previousMillis > interval) {
     previousMillis = currentMillis;
@@ -208,25 +211,25 @@ void loop() {
 
   lastButtonState = reading;
 
-  if (displayOn && firstDisplay) {
-    if (firstDisplay) {
-      firstDisplay = false;
-      previousMillisDisplay = currentMillis;
-      display.setTextAlignment(TEXT_ALIGN_CENTER);
-      display.setFont(ArialMT_Plain_10);
-      display.drawString(64, 10, "Web Interface On");
-      display.drawString(64, 20, "You May Connect to IP");
-      display.setFont(ArialMT_Plain_16);
-      display.drawString(64, 30, WiFi.localIP().toString());
-      display.drawString(64, 46, "Port: " + String(WEBSERVER_PORT));
-      display.display();
-    }
+  if (buttonState == HIGH) {
+    displayOn = true;
+  }
 
-    if (currentMillis - previousMillisDisplay > intervalDisplay) {
-      display.clear();
-      displayOn = false;
-      firstDisplay = true;
-    }
+  if (displayOn) {
+    displayOn = false;
+    previousMillisDisplay = currentMillis;
+    display.setTextAlignment(TEXT_ALIGN_CENTER);
+    display.setFont(ArialMT_Plain_10);
+    display.drawString(64, 10, "Web Interface On");
+    display.drawString(64, 20, "You May Connect to IP");
+    display.setFont(ArialMT_Plain_16);
+    display.drawString(64, 30, WiFi.localIP().toString());
+    display.drawString(64, 46, "Port: " + String(WEBSERVER_PORT));
+    display.display();
+  }
+
+  if (currentMillis - previousMillisDisplay > intervalDisplay) {
+    display.clear();
   }
 
   yield();
