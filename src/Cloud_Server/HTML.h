@@ -4,8 +4,8 @@ String parseControlPage();
 String parseConfigurePage();
 
 String footer = "<!-- Footer -->"
-                "<footer class='w3-center w3-black w3-padding-64 w3-opacity w3-hover-opacity-off'>"
-                "<div class='w3-xlarge w3-section'>"
+                "<footer class='w3-bottom w3-center w3-black w3-padding-small w3-opacity w3-hover-opacity-off'>"
+                "<div class='w3-xlarge'>"
                 "<a href='https://github.com/ZGoode/IOT-Cloud'><i class='fa fa-github w3-hover-opacity'></i></a>"
                 "<a href='https://twitter.com/FlamingBandaid'><i class='fa fa-twitter w3-hover-opacity'></i></a>"
                 "<a href='http://linkedin.com/in/zachary-goode-724441160'><i class='fa fa-linkedin w3-hover-opacity'></i></a>"
@@ -51,7 +51,7 @@ String header = "<!DOCTYPE html>"
                 "<div class='w3-bar' id='myNavbar'>"
                 "<a href='Home' class='w3-bar-item w3-button'>HOME</a>"
                 "<a href='Control' class='w3-bar-item w3-button w3-hide-small'><i class='fa fa-user'></i> CONTROL</a>"
-                "<a href='Configure' class='w3-bar-item w3-button w3-hide-small'><i class='fa fa-th'></i> CONFIGURE</a>"
+                "<a href='Configure' class='w3-bar-item w3-button w3-hide-small'><i class='fa fa-cogs'></i> CONFIGURE</a>"
                 "<a href='https://github.com/ZGoode/IOT-Cloud' class='w3-bar-item w3-button w3-hide-small'><i class='fa fa-th'></i> ABOUT</a>"
                 "<a href='/WifiReset' class='w3-bar-item w3-button w3-hide-small w3-right w3-hover-red'>WIFI RESET</a>"
                 "<a href='/FactoryReset' class='w3-bar-item w3-button w3-hide-small w3-right w3-hover-red'>FACTORY RESET</a>"
@@ -73,12 +73,13 @@ String controlPage = "<!-- First Parallax Image with Logo Text -->"
                      "<p><a href='/Automatic' class='w3-bar-item w3-button w3-hide-small'><i class='fa fa-user'></i> AUTOMATIC</a>"
                      "<a href='/ClearClouds' class='w3-bar-item w3-button w3-hide-small'><i class='fa fa-sun-o'></i> CLEAR CLOUDS</a>"
                      "<a href='/SpringDay' class='w3-bar-item w3-button w3-hide-small'><i class='fa fa-spinner'></i> SPRING DAY</a></p>"
-                     "<p><a href='/RainbowSky' class='w3-bar-item w3-button w3-hide-small'><i class='fa fa-star-o'></i> RAINBOW SKY</a>"
+                     "<p><a href='/SeizureMode' class='w3-bar-item w3-button w3-hide-small'><i class='fa fa-american-sign-language-interpreting'></i> SEIZURE MODE</a>"
                      "<a href='/LightningStorm' class='w3-bar-item w3-button w3-hide-small'><i class='fa fa-bolt'></i> LIGHTNING STORM</a>"
                      "<a href='/Rain' class='w3-bar-item w3-button w3-hide-small'><i class='fa fa-tint'></i> RAIN</a></p>"
                      "<p><a href='/Snow' class='w3-bar-item w3-button w3-hide-small'><i class='fa fa-snowflake-o'></i> SNOW</a>"
                      "<a href='/RainbowCycles' class='w3-bar-item w3-button w3-hide-small'><i class='fa fa-smile-o'></i> RAINBOW CYCLES</a>"
                      "<a href='/Cloudy' class='w3-bar-item w3-button w3-hide-small'><i class='fa fa-cloud'></i> CLOUDY</a></p>"
+                     "<p><a href='/Sunset' class='w3-bar-item w3-button w3-hide-small'><i class='fa fa-sun-o'></i> SUNSET</a></p>"
                      "</div>"
                      "</div>";
 
@@ -89,7 +90,7 @@ String configurePage = "<div class='bgimg w3-display-container w3-opacity-min' i
                        "<p><label>Password </label><input class='w3-input w3-border w3-margin-bottom' type='password' name='stationpassword' value='%STATIONPASSWORD%'></p>"
                        "<p><label>OTA Password </label><input class='w3-input w3-border w3-margin-bottom' type='password' name='otapassword' value='%OTAPASSWORD%'></p>"
                        "<p><label>OpenWeatherMap API Key (get from <a href='https://openweathermap.org/' target='_BLANK'>here</a>)</label><input class='w3-input w3-border w3-margin-bottom' type='text' name='openWeatherMapApiKey' value='%WEATHERKEY%' maxlength='60'></p>"
-                       "<p><label>City Code (get from <a href='https://openweathermap.org/find?q=' target='_BLANK'>here</a>)</label><input class='w3-input w3-border w3-margin-bottom' type='text' name='city1' value='%CITY1%' onkeypress='return isNumberKey(event)'></p>"
+                       "<p><label>City Code (get from <a href='https://openweathermap.org/find?q=' target='_BLANK'>here</a>)</label><input class='w3-input w3-border w3-margin-bottom' type='text' name='city1' value='%CITY%' onkeypress='return isNumberKey(event)'></p>"
                        "<button class='w3-button w3-block w3-grey w3-section w3-padding' type='submit'>Save</button>"
                        "</form>"
                        "</div>"
@@ -111,6 +112,8 @@ void setImage(int cloudMode) {
   } else if (cloudMode == 6) {
     homePage.replace("%BACKGROUND_IMAGE%", "");
   } else if (cloudMode == 7) {
+    homePage.replace("%BACKGROUND_IMAGE%", "");
+  } else if (cloudMode == 8) {
     homePage.replace("%BACKGROUND_IMAGE%", "");
   }
 }

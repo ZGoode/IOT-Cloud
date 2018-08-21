@@ -12,7 +12,7 @@ void sunrise();
 void springDay();
 void snow();
 void sunset();
-void rainbowSky();
+void seizureMode();
 void lightningStorm();
 void scrollFlash();
 void flash(int duration);
@@ -37,7 +37,7 @@ int sunriseLoop4 = 100;
 int sunriseLoop5 = 50;
 int snowLoop0 = 0;
 int sunsetLoop0 = 90;
-int rainbowSkyLoop0 = 0;
+int seizureModeLoop0 = 0;
 int rainLoop0 = 0;
 int cloudyLoop0 = 100;
 int cloudyLoop1 = 254;
@@ -59,8 +59,6 @@ void clearClouds() {
 }
 
 void rainbowCycle() {
-  Serial.println("RAINBOWCYCLE");
-
   if (rainbowCycleLoop0 < 256) {
     unsigned long currentMillis = millis();
     if (currentMillis - previousMillisArray[0] > interval1) {
@@ -97,7 +95,6 @@ void sunrise() {
     if (currentMillis - previousMillisArray[1] > interval5) {
       previousMillisArray[1] = currentMillis;
       pixels.setPixelColor(sunriseLoop0, 150, 50, 0);
-      pixels.show();
     }
     sunriseLoop0++;
   } else if (sunriseLoop0 <= ((NUMPIXELS / 6) * 5)) {
@@ -109,7 +106,6 @@ void sunrise() {
     if (currentMillis - previousMillisArray[2] > interval5) {
       previousMillisArray[2] = currentMillis;
       pixels.setPixelColor(sunriseLoop0, 150, 70, 0);
-      pixels.show();
     }
     sunriseLoop1++;
   } else if (sunriseLoop1 <= ((NUMPIXELS / 6) * 4)) {
@@ -121,7 +117,6 @@ void sunrise() {
     if (currentMillis - previousMillisArray[3] > interval5) {
       previousMillisArray[3] = currentMillis;
       pixels.setPixelColor(sunriseLoop0, 150, 90, 0);
-      pixels.show();
     }
     sunriseLoop2++;
   } else if (sunriseLoop2 <= ((NUMPIXELS / 6) * 3)) {
@@ -133,7 +128,6 @@ void sunrise() {
     if (currentMillis - previousMillisArray[4] > interval5) {
       previousMillisArray[4] = currentMillis;
       pixels.setPixelColor(sunriseLoop0, 150, 20, 0);
-      pixels.show();
     }
     sunriseLoop3++;
   } else if (sunriseLoop3 <= ((NUMPIXELS / 6) * 2)) {
@@ -145,7 +139,6 @@ void sunrise() {
     if (currentMillis - previousMillisArray[5] > interval5) {
       previousMillisArray[5] = currentMillis;
       pixels.setPixelColor(sunriseLoop0, 150, 40, 0);
-      pixels.show();
     }
     sunriseLoop4++;
   } else if (sunriseLoop4 <= (NUMPIXELS / 6)) {
@@ -157,12 +150,12 @@ void sunrise() {
     if (currentMillis - previousMillisArray[6] > interval5) {
       previousMillisArray[6] = currentMillis;
       pixels.setPixelColor(sunriseLoop0, 150, 50, 0);
-      pixels.show();
     }
     sunriseLoop5++;
   } else if (sunriseLoop5 <= 0) {
     sunriseLoop5 = (NUMPIXELS / 6);
   }
+  pixels.show();
 }
 
 void springDay() {
@@ -182,14 +175,14 @@ void snow() {
 
   if (snowLoop0 < NUMPIXELS) {
     unsigned long currentMillis = millis();
-    if (currentMillis - previousMillisArray[7] > interval4) {
+    if (currentMillis - previousMillisArray[7] > interval6) {
       previousMillisArray[7] = currentMillis;
       for (int i = 0; i < NUMPIXELS; i++) {
         pixels.setPixelColor(i, 17, 72, 143);
       }
       for (int j = 0; j < 12; j++) {
         for (int n = 0; n < 3; n++) {
-          pixels.setPixelColor((j * 25 + n + snowLoop0) % 300, 232, 248, 250);
+          pixels.setPixelColor((j * 10 + n + snowLoop0) % NUMPIXELS, 232, 248, 250);
         }
       }
       pixels.show();
@@ -200,31 +193,50 @@ void snow() {
   }
 }
 
+//void sunset() {
+//  Serial.println("SUNSET");
+//  if (sunsetLoop0 < 220) {
+//    unsigned long currentMillis = millis();
+//    if (currentMillis - previousMillisArray[8] > interval4) {
+//      previousMillisArray[8] = currentMillis;
+//      for (int i = 0; i < NUMPIXELS; i++) {
+//        if (sunsetLoop0 < 180) {
+//          pixels.setPixelColor(i, sunsetLoop0, 180 - sunsetLoop0, 0);
+//        } else {
+//          pixels.setPixelColor(i, sunsetLoop0, 0, 0);
+//        }
+//      }
+//      pixels.show();
+//    }
+//    sunsetLoop0++;
+//  } else if (sunsetLoop0 >= 220) {
+//    sunsetLoop0 = 90;
+//  }
+//}
+
 void sunset() {
-  Serial.println("SUNSET");
-  if (sunsetLoop0 < 220) {
-    unsigned long currentMillis = millis();
-    if (currentMillis - previousMillisArray[8] > interval4) {
-      previousMillisArray[8] = currentMillis;
-      for (int i = 0; i < NUMPIXELS; i++) {
-        if (sunsetLoop0 < 180) {
-          pixels.setPixelColor(i, sunsetLoop0, 180 - sunsetLoop0, 0);
-        } else {
-          pixels.setPixelColor(i, sunsetLoop0, 0, 0);
-        }
-      }
-      pixels.show();
-    }
-    sunsetLoop0++;
-  } else if (sunsetLoop0 >= 220) {
-    sunsetLoop0 = 90;
+  int i;
+  for (i = 0; i < (NUMPIXELS / 3); i++) {
+    pixels.setPixelColor(i, 150, 20, 0);
   }
+  for (i = ((NUMPIXELS / 3) + 1); i < (NUMPIXELS / 2); i++) {
+    pixels.setPixelColor(i, 150, 90, 0);
+  }
+  for (i = ((NUMPIXELS / 2) + 1); i < ((NUMPIXELS / 6) * 5); i++) {
+    pixels.setPixelColor(i, 150, 50, 0);
+  }
+  for (i = (((NUMPIXELS / 6) * 5) + 1); i < ((NUMPIXELS / 30) * 26); i++) {
+    pixels.setPixelColor(i, 150, 50, 0);
+  }
+  for (i = (((NUMPIXELS / 30) * 26) + 1); i < NUMPIXELS; i++) {
+    pixels.setPixelColor(i, Wheel(((i * 256 / NUMPIXELS)) & 255));
+  }
+  pixels.show();
 }
 
-void rainbowSky() {
-  Serial.println("RAINBOW");
-
-  if (rainbowSkyLoop0 == 0) {
+void seizureMode() {
+  Serial.println("SEIZURE");
+  if (seizureModeLoop0 == 0) {
     for (int i = 0; i < NUMPIXELS; i++) {
       if (i >= 0 && i < ((NUMPIXELS / 6) * 1))
         pixels.setPixelColor(i, 255, 0, 0);
@@ -240,14 +252,14 @@ void rainbowSky() {
         pixels.setPixelColor(i, 255, 0, 255);
     }
     pixels.show();
-    rainbowSkyLoop0 = 1;
-  } else if (rainbowSkyLoop0 == 1) {
+    seizureModeLoop0 = 1;
+  } else if (seizureModeLoop0 == 1) {
     for (int i = 0; i < NUMPIXELS; i++) {
       pixels.setPixelColor(i, 0, 0, 0);
     }
     pixels.show();
-    rainbowSkyLoop0 = 2;
-  } else if (rainbowSkyLoop0 == 2) {
+    seizureModeLoop0 = 2;
+  } else if (seizureModeLoop0 == 2) {
     for (int i = 0; i < NUMPIXELS; i++) {
       if (i >= 0 && i < ((NUMPIXELS / 6) * 1))
         pixels.setPixelColor(i, 255, 0, 0);
@@ -263,7 +275,7 @@ void rainbowSky() {
         pixels.setPixelColor(i, 255, 0, 255);
     }
     pixels.show();
-    rainbowSkyLoop0 = 0;
+    seizureModeLoop0 = 0;
   }
 }
 
@@ -409,7 +421,7 @@ void rain() {
         pixels.setPixelColor(a, 5, 5, 5); //set LEDs a gray color
       }
       for (int b = 0; b < 20; b++) {
-        pixels.setPixelColor(15 * b + rainLoop0, 235, 235, 255); //set rain color
+        pixels.setPixelColor(10 * b + rainLoop0, 235, 235, 255); //set rain color
       }
       pixels.show();
     }
@@ -424,12 +436,11 @@ void cloudy() {
 
   if (cloudyLoop0 < 255) {
     unsigned long currentMillis = millis();
-    if (currentMillis - previousMillisArray[10] > interval2) {
+    if (currentMillis - previousMillisArray[10] > interval4) {
       previousMillisArray[10] = currentMillis;
       for (int a = 0; a < NUMPIXELS; a++) {
         pixels.setPixelColor(a, cloudyLoop0, cloudyLoop0, cloudyLoop0); //set LEDs a gray color
       }
-      pixels.show();
     }
     cloudyLoop0++;
   } else if (cloudyLoop0 >= 255) {
@@ -438,15 +449,15 @@ void cloudy() {
 
   if (cloudyLoop1 > 99) {
     unsigned long currentMillis = millis();
-    if (currentMillis - previousMillisArray[11] > interval2) {
+    if (currentMillis - previousMillisArray[11] > interval4) {
       previousMillisArray[11] = currentMillis;
       for (int a = 0; a < NUMPIXELS; a++) {
         pixels.setPixelColor(a, cloudyLoop1, cloudyLoop1, cloudyLoop1); //set LEDs a gray color
       }
-      pixels.show();
     }
     cloudyLoop1++;
   } else if (cloudyLoop1 <= 99) {
     cloudyLoop1 = 254;
   }
+  pixels.show();
 }

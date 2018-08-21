@@ -32,8 +32,10 @@ int weatherID;
 int currentMode = 0;
 int currentPattern = -1;
 long previousMillis = 0;
+long previousMillisWeather = 0;
 long previousMillisDisplay = 0;
 long interval = 1800000;
+long intervalWeather = 600000;
 long intervalDisplay = 10000;
 int currentWeatherID = 0;
 boolean displayOn = true;
@@ -87,14 +89,16 @@ void handleControl();
 void handleAutomatic();
 void handleClearClouds();
 void handleSpringDay();
-void handleRainbowSky();
+void handleseizureMode();
 void handleLightningStorm();
 void handleRain();
 void handleSnow();
 void handleRainbowCycles();
 void handleCloudy();
+void handleSunset();
 String parseCurrentMode();
 String parseCurrentPattern();
+int getID();
 
 void setup() {
   Serial.begin(115200);
@@ -165,12 +169,13 @@ void setup() {
   server.on("/Automatic", handleAutomatic);
   server.on("/ClearClouds", handleClearClouds);
   server.on("/SpringDay", handleSpringDay);
-  server.on("/RainbowSky", handleRainbowSky);
+  server.on("/SeizureMode", handleSeizureMode);
   server.on("/LightningStorm", handleLightningStorm);
   server.on("/Rain", handleRain);
   server.on("/Snow", handleSnow);
   server.on("/RainbowCycles", handleRainbowCycles);
   server.on("/Cloudy", handleCloudy);
+  server.on("/Sunset", handleSunset);
   server.onNotFound(handleRoot);
   server.begin();
   Serial.println("Server Started");
@@ -178,7 +183,8 @@ void setup() {
   Serial.println("Use this URL : " + webAddress);
 
   weatherClient.updateWeather();
-  currentWeatherID = weatherClient.getWeatherId(0).toInt();
+  currentWeatherID = weatherClient.getWeatherId().toInt();
+  parseWeatherConditionID(currentWeatherID);
   Serial.println(currentWeatherID);
 }
 
@@ -192,7 +198,8 @@ void loop() {
   if (currentMillis - previousMillis > interval) {
     previousMillis = currentMillis;
     weatherClient.updateWeather();
-    currentWeatherID = weatherClient.getWeatherId(0).toInt();
+    currentWeatherID = weatherClient.getWeatherId().toInt();
+    parseWeatherConditionID(currentWeatherID);
     Serial.println(currentWeatherID);
   }
 
@@ -232,9 +239,26 @@ void loop() {
     display.clear();
   }
 
-  yield();
   if (currentMode == 0) {
-    parseWeatherConditionID(currentWeatherID);
+    if (currentPattern == 0) {
+      clearClouds();
+    } else if (currentPattern == 1) {
+      springDay();
+    } else if (currentPattern == 2) {
+      seizureMode();
+    } else if (currentPattern == 3) {
+      lightningStorm();
+    } else if (currentPattern == 4) {
+      rain();
+    } else if (currentPattern == 5) {
+      snow();
+    } else if (currentPattern == 6) {
+      rainbowCycle();
+    } else if (currentPattern == 7) {
+      cloudy();
+    } else if (currentPattern == 8) {
+      sunset();
+    }
   } else if (currentMode == 1) {
     clearClouds();
     currentPattern = 0;
@@ -242,7 +266,7 @@ void loop() {
     springDay();
     currentPattern = 1;
   } else if (currentMode == 3) {
-    rainbowSky();
+    seizureMode();
     currentPattern = 2;
   } else if (currentMode == 4) {
     lightningStorm();
@@ -259,6 +283,9 @@ void loop() {
   } else if (currentMode == 8) {
     cloudy();
     currentPattern = 7;
+  } else if (currentMode == 9) {
+    sunset();
+    currentPattern = 8;
   }
 }
 
@@ -371,6 +398,7 @@ void readSettings() {
   }
   fr.close();
   weatherClient.updateWeatherApiKey(WeatherApiKey);
+  weatherClient.updateCityId(CityID);
   weatherClient.setMetric(IS_METRIC);
   weatherClient.updateCityId(CityID);
 }
@@ -395,7 +423,7 @@ void handleConfigure() {
   form.replace("%STATIONPASSWORD%", www_password);
   form.replace("%OTAPASSWORD%", OTA_Password);
   form.replace("%WEATHERKEY%", WeatherApiKey);
-  form.replace("%CITY1%", String(CityID));
+  form.replace("%CITY%", String(CityID));
 
   Serial.println(String(CityID));
   server.send(200, "text/html", form);  // Configure portal for the cloud
@@ -405,8 +433,9 @@ void handleConfigureNoPassword() {
   String form = parseConfigurePage();
   form.replace("%USERID%", www_username);
   form.replace("%STATIONPASSWORD%", www_password);
+  form.replace("%OTAPASSWORD%", OTA_Password);
   form.replace("%WEATHERKEY%", WeatherApiKey);
-  form.replace("%CITY1%", String(CityID));
+  form.replace("%CITY%", String(CityID));
 
   server.send(200, "text/html", form);  // Configure portal for the cloud
 }
@@ -416,7 +445,8 @@ void handleControl() {
     return server.requestAuthentication();
   }
   String form = parseControlPage();
-  form.replace ("%MODE%", parseCurrentMode());
+  form.replace("%MODE%", parseCurrentMode());
+  Serial.println(currentWeatherID);
 
   server.send(200, "text/html", form);  // Control page for the cloud
 }
@@ -436,7 +466,7 @@ void handleSpringDay() {
   handleControl();
 }
 
-void handleRainbowSky() {
+void handleSeizureMode() {
   currentMode = 3;
   handleControl();
 }
@@ -466,6 +496,11 @@ void handleCloudy() {
   handleControl();
 }
 
+void handleSunset() {
+  currentMode = 9;
+  handleControl();
+}
+
 String parseCurrentMode() {
   if (currentMode == 0) {
     return "Automatic";
@@ -474,7 +509,7 @@ String parseCurrentMode() {
   } else if (currentMode == 2) {
     return "Spring Day";
   } else if (currentMode == 3) {
-    return "Rainbow Sky";
+    return "Seizure Mode";
   } else if (currentMode == 4) {
     return "Lightning Storm";
   } else if (currentMode == 5) {
@@ -485,6 +520,8 @@ String parseCurrentMode() {
     return "Rainbow Cycles";
   } else if (currentMode == 8) {
     return "Cloudy";
+  } else if (currentMode == 9) {
+    return "Sunset";
   } else {
     return "";
   }
@@ -499,7 +536,7 @@ String parseCurrentPattern() {
   } else if (currentPattern == 1) {
     temp = "Spring Day";
   } else if (currentPattern == 2) {
-    temp = "Rainbow Sky";
+    temp = "Seizure Mode";
   } else if (currentPattern == 3) {
     temp = "Lightning Storm";
   } else if (currentPattern == 4) {
@@ -510,6 +547,8 @@ String parseCurrentPattern() {
     temp = "Rainbow Cycles";
   } else if (currentPattern == 7) {
     temp = "Cloudy";
+  } else if (currentPattern == 8) {
+    temp = "Sunset";
   } else {
     temp = "";
   }
@@ -518,30 +557,22 @@ String parseCurrentPattern() {
 }
 
 void parseWeatherConditionID(int i) {
-  int randomseed = random(1, 4);
+  int randomseed = random(2);
   byte msg[1];
   if (i == 800) {
     Serial.printf("Clear Skies: %d\n", i);
-    if (randomseed == 1) {
-      clearClouds();
+    if (randomseed == 0) {
       currentPattern = 0;
-    } else if (randomseed == 2) {
-      springDay();
+    } else {
       currentPattern = 1;
-    }
-    else {
-      rainbowSky();
-      currentPattern = 2;
     }
     return;
   }
   else if (i == 962) {
     Serial.printf("Hurricane: %d\n", i);
     if (randomseed == 1) {
-      lightningStorm();
       currentPattern = 3;
     } else {
-      rain();
       currentPattern = 4;
     }
   }
@@ -549,36 +580,29 @@ void parseWeatherConditionID(int i) {
   if (i == 2) {
     Serial.printf("Thunderstorm: %d\n", i);
     if (randomseed == 1) {
-      lightningStorm();
       currentPattern = 3;
     } else {
-      rain();
       currentPattern = 4;
     }
   }
   else if (i == 3) {
     Serial.printf("Drizzle: %d\n", i);
-    rain();
     currentPattern = 4;
   }
   else if (i == 5) {
     Serial.printf("Rain: %d\n", i);
-    rain();
     currentPattern = 4;
   }
   else if (i == 6) {
     Serial.printf("Snow: %d\n", i);
-    snow();
     currentPattern = 5;
   }
   else if (i == 7) {
     Serial.printf("Crap: %d\n", i);
-    rainbowCycle();
     currentPattern = 6;
   }
   else if (i == 8) {
     Serial.printf("Clouds: %d\n", i);
-    cloudy();
     currentPattern = 7;
   }
 }

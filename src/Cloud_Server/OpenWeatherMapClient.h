@@ -52,7 +52,7 @@ class OpenWeatherMapClient {
       String error;
     } weather;
 
-    weather weathers[5];
+    weather weathers;
 
     String roundValue(String value);
 
@@ -65,24 +65,24 @@ class OpenWeatherMapClient {
 
     String getWeatherResults();
 
-    String getLat(int index);
-    String getLon(int index);
-    String getDt(int index);
-    String getCity(int index);
-    String getCountry(int index);
-    String getTemp(int index);
-    String getTempRounded(int index);
-    String getHumidity(int index);
-    String getHumidityRounded(int index);
-    String getCondition(int index);
-    String getWind(int index);
-    String getWindRounded(int index);
-    String getWeatherId(int index);
-    String getDescription(int index);
-    String getIcon(int index);
+    String getLat();
+    String getLon();
+    String getDt();
+    String getCity();
+    String getCountry();
+    String getTemp();
+    String getTempRounded();
+    String getHumidity();
+    String getHumidityRounded();
+    String getCondition();
+    String getWind();
+    String getWindRounded();
+    String getWeatherId();
+    String getDescription();
+    String getIcon();
     boolean getCached();
     String getMyCityIDs();
-    String getWeatherIcon(int index);
+    String getWeatherIcon();
     String getError();
 };
 

@@ -77,13 +77,13 @@ void OpenWeatherMapClient::updateWeather() {
   const size_t bufferSize = 710;
   DynamicJsonBuffer jsonBuffer(bufferSize);
 
-  weathers[0].cached = false;
-  weathers[0].error = "";
+  weathers.cached = false;
+  weathers.error = "";
   // Parse JSON object
   JsonObject& root = jsonBuffer.parseObject(weatherClient);
   if (!root.success()) {
     Serial.println(F("Weather Data Parsing failed!"));
-    weathers[0].error = "Weather Data Parsing failed!";
+    weathers.error = "Weather Data Parsing failed!";
     return;
   }
 
@@ -91,39 +91,39 @@ void OpenWeatherMapClient::updateWeather() {
 
   if (root.measureLength() <= 150) {
     Serial.println("Error Does not look like we got the data.  Size: " + String(root.measureLength()));
-    weathers[0].cached = true;
-    weathers[0].error = (const char*)root["message"];
-    Serial.println("Error: " + weathers[0].error);
+    weathers.cached = true;
+    weathers.error = (const char*)root["message"];
+    Serial.println("Error: " + weathers.error);
     return;
   }
   int count = root["cnt"];
 
   for (int inx = 0; inx < count; inx++) {
-    weathers[inx].lat = (const char*)root["list"][inx]["coord"]["lat"];
-    weathers[inx].lon = (const char*)root["list"][inx]["coord"]["lon"];
-    weathers[inx].dt = (const char*)root["list"][inx]["dt"];
-    weathers[inx].city = (const char*)root["list"][inx]["name"];
-    weathers[inx].country = (const char*)root["list"][inx]["sys"]["country"];
-    weathers[inx].temp = (const char*)root["list"][inx]["main"]["temp"];
-    weathers[inx].humidity = (const char*)root["list"][inx]["main"]["humidity"];
-    weathers[inx].condition = (const char*)root["list"][inx]["weather"][0]["main"];
-    weathers[inx].wind = (const char*)root["list"][inx]["wind"]["speed"];
-    weathers[inx].weatherId = (const char*)root["list"][inx]["weather"][0]["id"];
-    weathers[inx].description = (const char*)root["list"][inx]["weather"][0]["description"];
-    weathers[inx].icon = (const char*)root["list"][inx]["weather"][0]["icon"];
+    weathers.lat = (const char*)root["list"][inx]["coord"]["lat"];
+    weathers.lon = (const char*)root["list"][inx]["coord"]["lon"];
+    weathers.dt = (const char*)root["list"][inx]["dt"];
+    weathers.city = (const char*)root["list"][inx]["name"];
+    weathers.country = (const char*)root["list"][inx]["sys"]["country"];
+    weathers.temp = (const char*)root["list"][inx]["main"]["temp"];
+    weathers.humidity = (const char*)root["list"][inx]["main"]["humidity"];
+    weathers.condition = (const char*)root["list"][inx]["weather"][0]["main"];
+    weathers.wind = (const char*)root["list"][inx]["wind"]["speed"];
+    weathers.weatherId = (const char*)root["list"][inx]["weather"][0]["id"];
+    weathers.description = (const char*)root["list"][inx]["weather"][0]["description"];
+    weathers.icon = (const char*)root["list"][inx]["weather"][0]["icon"];
 
-    Serial.println("lat: " + weathers[inx].lat);
-    Serial.println("lon: " + weathers[inx].lon);
-    Serial.println("dt: " + weathers[inx].dt);
-    Serial.println("city: " + weathers[inx].city);
-    Serial.println("country: " + weathers[inx].country);
-    Serial.println("temp: " + weathers[inx].temp);
-    Serial.println("humidity: " + weathers[inx].humidity);
-    Serial.println("condition: " + weathers[inx].condition);
-    Serial.println("wind: " + weathers[inx].wind);
-    Serial.println("weatherId: " + weathers[inx].weatherId);
-    Serial.println("description: " + weathers[inx].description);
-    Serial.println("icon: " + weathers[inx].icon);
+    Serial.println("lat: " + weathers.lat);
+    Serial.println("lon: " + weathers.lon);
+    Serial.println("dt: " + weathers.dt);
+    Serial.println("city: " + weathers.city);
+    Serial.println("country: " + weathers.country);
+    Serial.println("temp: " + weathers.temp);
+    Serial.println("humidity: " + weathers.humidity);
+    Serial.println("condition: " + weathers.condition);
+    Serial.println("wind: " + weathers.wind);
+    Serial.println("weatherId: " + weathers.weatherId);
+    Serial.println("description: " + weathers.description);
+    Serial.println("icon: " + weathers.icon);
     Serial.println();
 
   }
@@ -137,9 +137,7 @@ String OpenWeatherMapClient::roundValue(String value) {
 
 void OpenWeatherMapClient::updateCityId(int CityID) {
   myCityIDs = "";
-  if (myCityIDs != "") {
-    myCityIDs = CityID;
-  }
+  myCityIDs = CityID;
 }
 
 void OpenWeatherMapClient::setMetric(boolean isMetric) {
@@ -154,68 +152,68 @@ String OpenWeatherMapClient::getWeatherResults() {
   return result;
 }
 
-String OpenWeatherMapClient::getLat(int index) {
-  return weathers[index].lat;
+String OpenWeatherMapClient::getLat() {
+  return weathers.lat;
 }
 
-String OpenWeatherMapClient::getLon(int index) {
-  return weathers[index].lon;
+String OpenWeatherMapClient::getLon() {
+  return weathers.lon;
 }
 
-String OpenWeatherMapClient::getDt(int index) {
-  return weathers[index].dt;
+String OpenWeatherMapClient::getDt() {
+  return weathers.dt;
 }
 
-String OpenWeatherMapClient::getCity(int index) {
-  return weathers[index].city;
+String OpenWeatherMapClient::getCity() {
+  return weathers.city;
 }
 
-String OpenWeatherMapClient::getCountry(int index) {
-  return weathers[index].country;
+String OpenWeatherMapClient::getCountry() {
+  return weathers.country;
 }
 
-String OpenWeatherMapClient::getTemp(int index) {
-  return weathers[index].temp;
+String OpenWeatherMapClient::getTemp() {
+  return weathers.temp;
 }
 
-String OpenWeatherMapClient::getTempRounded(int index) {
-  return roundValue(getTemp(index));
+String OpenWeatherMapClient::getTempRounded() {
+  return roundValue(getTemp());
 }
 
-String OpenWeatherMapClient::getHumidity(int index) {
-  return weathers[index].humidity;
+String OpenWeatherMapClient::getHumidity() {
+  return weathers.humidity;
 }
 
-String OpenWeatherMapClient::getHumidityRounded(int index) {
-  return roundValue(getHumidity(index));
+String OpenWeatherMapClient::getHumidityRounded() {
+  return roundValue(getHumidity());
 }
 
-String OpenWeatherMapClient::getCondition(int index) {
-  return weathers[index].condition;
+String OpenWeatherMapClient::getCondition() {
+  return weathers.condition;
 }
 
-String OpenWeatherMapClient::getWind(int index) {
-  return weathers[index].wind;
+String OpenWeatherMapClient::getWind() {
+  return weathers.wind;
 }
 
-String OpenWeatherMapClient::getWindRounded(int index) {
-  return roundValue(getWind(index));
+String OpenWeatherMapClient::getWindRounded() {
+  return roundValue(getWind());
 }
 
-String OpenWeatherMapClient::getWeatherId(int index) {
-  return weathers[index].weatherId;
+String OpenWeatherMapClient::getWeatherId() {
+  return weathers.weatherId;
 }
 
-String OpenWeatherMapClient::getDescription(int index) {
-  return weathers[index].description;
+String OpenWeatherMapClient::getDescription() {
+  return weathers.description;
 }
 
-String OpenWeatherMapClient::getIcon(int index) {
-  return weathers[index].icon;
+String OpenWeatherMapClient::getIcon() {
+  return weathers.icon;
 }
 
 boolean OpenWeatherMapClient::getCached() {
-  return weathers[0].cached;
+  return weathers.cached;
 }
 
 String OpenWeatherMapClient::getMyCityIDs() {
@@ -223,12 +221,12 @@ String OpenWeatherMapClient::getMyCityIDs() {
 }
 
 String OpenWeatherMapClient::getError() {
-  return weathers[0].error;
+  return weathers.error;
 }
 
-String OpenWeatherMapClient::getWeatherIcon(int index)
+String OpenWeatherMapClient::getWeatherIcon()
 {
-  int id = getWeatherId(index).toInt();
+  int id = getWeatherId().toInt();
   String W = ")";
   switch (id)
   {
