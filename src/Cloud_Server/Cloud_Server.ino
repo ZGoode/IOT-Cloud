@@ -13,7 +13,7 @@
 #include "OpenWeatherMapClient.h"
 
 #define VERSION "1.0"
-#define HOSTNAME "Cloud"
+#define HOSTNAME "IOT-WEATHER-CLOUD"
 #define CONFIG "/conf.txt"
 
 String WeatherApiKey = "";
@@ -128,7 +128,6 @@ void setup() {
   WiFiManager wifiManager;
 
   String hostname(HOSTNAME);
-  hostname += String(ESP.getChipId(), HEX);
   if (!wifiManager.autoConnect((const char *)hostname.c_str())) {// new addition
     delay(3000);
     WiFi.disconnect(true);
