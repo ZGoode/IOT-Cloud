@@ -175,14 +175,14 @@ void snow() {
 
   if (snowLoop0 < NUMPIXELS) {
     unsigned long currentMillis = millis();
-    if (currentMillis - previousMillisArray[7] > interval6) {
+    if (currentMillis - previousMillisArray[7] > interval5 /*6*/) {
       previousMillisArray[7] = currentMillis;
       for (int i = 0; i < NUMPIXELS; i++) {
         pixels.setPixelColor(i, 17, 72, 143);
       }
       for (int j = 0; j < 12; j++) {
         for (int n = 0; n < 3; n++) {
-          pixels.setPixelColor((j * 10 + n + snowLoop0) % NUMPIXELS, 232, 248, 250);
+          pixels.setPixelColor((j * 5/*10*/ + n + snowLoop0) % NUMPIXELS, 232, 248, 250);
         }
       }
       pixels.show();
@@ -192,27 +192,6 @@ void snow() {
     snowLoop0 = 0;
   }
 }
-
-//void sunset() {
-//  Serial.println("SUNSET");
-//  if (sunsetLoop0 < 220) {
-//    unsigned long currentMillis = millis();
-//    if (currentMillis - previousMillisArray[8] > interval4) {
-//      previousMillisArray[8] = currentMillis;
-//      for (int i = 0; i < NUMPIXELS; i++) {
-//        if (sunsetLoop0 < 180) {
-//          pixels.setPixelColor(i, sunsetLoop0, 180 - sunsetLoop0, 0);
-//        } else {
-//          pixels.setPixelColor(i, sunsetLoop0, 0, 0);
-//        }
-//      }
-//      pixels.show();
-//    }
-//    sunsetLoop0++;
-//  } else if (sunsetLoop0 >= 220) {
-//    sunsetLoop0 = 90;
-//  }
-//}
 
 void sunset() {
   int i;

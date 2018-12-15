@@ -12,7 +12,7 @@
 #include "HTML.h"
 #include "OpenWeatherMapClient.h"
 
-#define VERSION "1.0"
+#define VERSION "1.1"
 #define HOSTNAME "IOT-WEATHER-CLOUD"
 #define CONFIG "/conf.txt"
 
@@ -26,7 +26,7 @@ char* www_password = "password";
 
 String OTA_Password = "password";
 
-const int buttonPin = D3;
+const int buttonPin = D7;
 int externalLight = LED_BUILTIN;
 int weatherID;
 int currentMode = 0;
@@ -39,10 +39,6 @@ long intervalWeather = 600000;
 long intervalDisplay = 10000;
 int currentWeatherID = 0;
 boolean displayOn = true;
-boolean firstDisplay = true;
-
-int buttonState;             // the current reading from the input pin
-int lastButtonState = LOW;   // the previous reading from the input pin
 
 // the following variables are long's because the time, measured in miliseconds,
 // will quickly become a bigger number than can be stored in an int.
@@ -80,7 +76,7 @@ void parseWeatherConditionID(int i);
 int8_t getWifiQuality();
 void readSettings();
 void writeSettings();
-void handleUpdateConfig();
+void handleUpdateConfigure();
 void handleNotFound();
 void handleRoot();
 void handleConfigure();
@@ -118,6 +114,14 @@ void setup() {
   }
 
   display.clear();
+  display.setTextAlignment(TEXT_ALIGN_CENTER);
+  display.setFont(ArialMT_Plain_10);
+  display.drawString(64, 10, "Connect to WiFi Network");
+  display.setFont(ArialMT_Plain_10);
+  display.drawString(64, 24, HOSTNAME);
+  display.setFont(ArialMT_Plain_10);
+  display.drawString(64, 38, "And log into your home");
+  display.drawString(64, 48, "WiFi network to setup");
   display.display();
 
   parseHomePage();
@@ -181,6 +185,16 @@ void setup() {
   String webAddress = "http://" + WiFi.localIP().toString() + ":" + String(WEBSERVER_PORT) + "/";
   Serial.println("Use this URL : " + webAddress);
 
+  display.clear();
+  display.setTextAlignment(TEXT_ALIGN_CENTER);
+  display.setFont(ArialMT_Plain_10);
+  display.drawString(64, 10, "Web Interface On");
+  display.drawString(64, 20, "You May Connect to IP");
+  display.setFont(ArialMT_Plain_16);
+  display.drawString(64, 30, WiFi.localIP().toString());
+  display.drawString(64, 46, "Port: " + String(WEBSERVER_PORT));
+  display.display();
+
   weatherClient.updateWeather();
   currentWeatherID = weatherClient.getWeatherId().toInt();
   parseWeatherConditionID(currentWeatherID);
@@ -200,28 +214,9 @@ void loop() {
     currentWeatherID = weatherClient.getWeatherId().toInt();
     parseWeatherConditionID(currentWeatherID);
     Serial.println(currentWeatherID);
-  }
+  }  
 
-  int reading = digitalRead(buttonPin);
-
-  if (reading != lastButtonState) {
-    // reset the debouncing timer
-    lastDebounceTime = millis();
-  }
-
-  if ((millis() - lastDebounceTime) > debounceDelay) {
-    // whatever the reading is at, it's been there for longer
-    // than the debounce delay, so take it as the actual current state:
-    buttonState = reading;
-  }
-
-  lastButtonState = reading;
-
-  if (buttonState == HIGH) {
-    displayOn = true;
-  }
-
-  if (displayOn) {
+  if (displayOn == true) {
     displayOn = false;
     previousMillisDisplay = currentMillis;
     display.setTextAlignment(TEXT_ALIGN_CENTER);
@@ -236,6 +231,11 @@ void loop() {
 
   if (currentMillis - previousMillisDisplay > intervalDisplay) {
     display.clear();
+    display.display();
+  }
+
+  if (digitalRead(D7) == LOW) {
+    displayOn = true;
   }
 
   if (currentMode == 0) {
