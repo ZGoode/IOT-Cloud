@@ -9,6 +9,7 @@ String footer = "<!-- Footer -->"
                 "<a href='https://github.com/ZGoode/IOT-Cloud'><i class='fa fa-github w3-hover-opacity'></i></a>"
                 "<a href='https://twitter.com/FlamingBandaid'><i class='fa fa-twitter w3-hover-opacity'></i></a>"
                 "<a href='http://linkedin.com/in/zachary-goode-724441160'><i class='fa fa-linkedin w3-hover-opacity'></i></a>"
+                "<a href='https://www.instructables.com/member/Zachary%20Goode/?publicView=true'><i class='w3-hover-opacity'></i></a>"
                 "</div>"
                 "</footer>"
                 ""
@@ -52,7 +53,8 @@ String header = "<!DOCTYPE html>"
                 "<a href='Home' class='w3-bar-item w3-button'>HOME</a>"
                 "<a href='Control' class='w3-bar-item w3-button w3-hide-small'><i class='fa fa-user'></i> CONTROL</a>"
                 "<a href='Configure' class='w3-bar-item w3-button w3-hide-small'><i class='fa fa-cogs'></i> CONFIGURE</a>"
-                "<a href='https://github.com/ZGoode/IOT-Cloud' class='w3-bar-item w3-button w3-hide-small'><i class='fa fa-th'></i> ABOUT</a>"
+                "<a href='https://github.com/ZGoode/IOT-Cloud' class='w3-bar-item w3-button w3-hide-small'><i class='fa fa-th'></i> CODE</a>"
+                "<a href='put the instructables link here' class='w3-bar-item w3-button w3-hide-small'><i class='fa fa-th'></i> ABOUT</a>"
                 "<a href='/WifiReset' class='w3-bar-item w3-button w3-hide-small w3-right w3-hover-red'>WIFI RESET</a>"
                 "<a href='/FactoryReset' class='w3-bar-item w3-button w3-hide-small w3-right w3-hover-red'>FACTORY RESET</a>"
                 "</div>"
@@ -129,4 +131,3 @@ String parseControlPage() {
 String parseConfigurePage() {
   return header + configurePage + footer;
 }
-
