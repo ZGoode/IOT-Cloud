@@ -582,7 +582,11 @@ void parseWeatherConditionID(int i) {
     } else if (randomseed2 == 1) {
       currentPattern = 1;
     } else {
-      currentPattern = 9;
+      if (randomseed == 0) {
+        currentPattern = 9;
+      } else if (randomseed == 1) {
+        currentPattern = 8;
+      }
     }
     return;
   }

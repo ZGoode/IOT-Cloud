@@ -41,6 +41,19 @@ int seizureModeLoop0 = 0;
 int rainLoop0 = 0;
 int cloudyLoop0 = 100;
 int cloudyLoop1 = 254;
+int scrollFlashLoop0 = 0;
+int flashNum = 0;
+int dualFlashNum = 0;
+int minFlash = 0;
+int maxFlash = 0;
+
+boolean scrollFlashOn = false;
+boolean flashOn = false;
+boolean dualFlashOn = false;
+boolean firstFlashOn = true;
+boolean delayOneDone = false;
+boolean delayTwoDone = false;
+boolean delayThreeDone = false;
 
 int previousMillisArray[20] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
@@ -90,70 +103,23 @@ uint32_t Wheel(byte WheelPos) {
 void sunrise() {
   Serial.println("SUNRISE");
 
-  if (sunriseLoop0 > ((NUMPIXELS / 6) * 5)) {
-    unsigned long currentMillis = millis();
-    if (currentMillis - previousMillisArray[1] > interval5) {
-      previousMillisArray[1] = currentMillis;
-      pixels.setPixelColor(sunriseLoop0, 150, 50, 0);
-    }
-    sunriseLoop0++;
-  } else if (sunriseLoop0 <= ((NUMPIXELS / 6) * 5)) {
-    sunriseLoop0 = NUMPIXELS;
+  for (int i = 300; i > 250; i--) {
+    pixels.setPixelColor(i, 150, 50, 0);
   }
-
-  if (sunriseLoop1 > ((NUMPIXELS / 6) * 4)) {
-    unsigned long currentMillis = millis();
-    if (currentMillis - previousMillisArray[2] > interval5) {
-      previousMillisArray[2] = currentMillis;
-      pixels.setPixelColor(sunriseLoop0, 150, 70, 0);
-    }
-    sunriseLoop1++;
-  } else if (sunriseLoop1 <= ((NUMPIXELS / 6) * 4)) {
-    sunriseLoop1 = ((NUMPIXELS / 6) * 5);
+  for (int i = 250; i > 200; i--) {
+    pixels.setPixelColor(i, 150, 70, 0);
   }
-
-  if (sunriseLoop2 > ((NUMPIXELS / 6) * 3)) {
-    unsigned long currentMillis = millis();
-    if (currentMillis - previousMillisArray[3] > interval5) {
-      previousMillisArray[3] = currentMillis;
-      pixels.setPixelColor(sunriseLoop0, 150, 90, 0);
-    }
-    sunriseLoop2++;
-  } else if (sunriseLoop2 <= ((NUMPIXELS / 6) * 3)) {
-    sunriseLoop2 = ((NUMPIXELS / 6) * 4);
+  for (int i = 200; i > 150; i--) {
+    pixels.setPixelColor(i, 150, 90, 0);
   }
-
-  if (sunriseLoop3 > ((NUMPIXELS / 6) * 2)) {
-    unsigned long currentMillis = millis();
-    if (currentMillis - previousMillisArray[4] > interval5) {
-      previousMillisArray[4] = currentMillis;
-      pixels.setPixelColor(sunriseLoop0, 150, 20, 0);
-    }
-    sunriseLoop3++;
-  } else if (sunriseLoop3 <= ((NUMPIXELS / 6) * 2)) {
-    sunriseLoop3 = ((NUMPIXELS / 6) * 3);
+  for (int i = 150; i > 100; i--) {
+    pixels.setPixelColor(i, 150, 20, 0);
   }
-
-  if (sunriseLoop4 > (NUMPIXELS / 6)) {
-    unsigned long currentMillis = millis();
-    if (currentMillis - previousMillisArray[5] > interval5) {
-      previousMillisArray[5] = currentMillis;
-      pixels.setPixelColor(sunriseLoop0, 150, 40, 0);
-    }
-    sunriseLoop4++;
-  } else if (sunriseLoop4 <= (NUMPIXELS / 6)) {
-    sunriseLoop4 = ((NUMPIXELS / 6) * 2);
+  for (int i = 100; i > 50; i--) {
+    pixels.setPixelColor(i, 150, 40, 0);
   }
-
-  if (sunriseLoop5 > 0) {
-    unsigned long currentMillis = millis();
-    if (currentMillis - previousMillisArray[6] > interval5) {
-      previousMillisArray[6] = currentMillis;
-      pixels.setPixelColor(sunriseLoop0, 150, 50, 0);
-    }
-    sunriseLoop5++;
-  } else if (sunriseLoop5 <= 0) {
-    sunriseLoop5 = (NUMPIXELS / 6);
+  for (int i = 50; i > 0; i--) {
+    pixels.setPixelColor(i, 150, 50, 0);
   }
   pixels.show();
 }
@@ -260,28 +226,44 @@ void seizureMode() {
 
 void lightningStorm() {
   Serial.println("LIGHTNING");
-  int num = 4; //Change Later if need be
-  for (int i = 0; i < num; i++) {
+  if (scrollFlashOn == true) {
+    scrollFlash();
+  } else if (flashOn == true) {
+    flash(flashNum);
+  } else if (dualFlashOn == true) {
+    dualFlash(dualFlashNum);
+  } else {
     //Creates random number to see what bolt happens, 0 = scroll flash, 1-3 is flash, 4 = dual flash
     int randNum = random(4);
     switch (randNum) {
       case 0:
         scrollFlash();
+        scrollFlashOn = true;
         break;
       case 1:
-        flash(random(999) + 500);
+        flashNum = random(999) + 500;
+        flash(flashNum);
+        flashOn = true;
+        firstFlashOn = true;
         break;
       case 2:
-        flash(random(999) + 500);
+        flashNum = random(999) + 500;
+        flash(flashNum);
+        flashOn = true;
+        firstFlashOn = true;
         break;
       case 3:
-        flash(random(999) + 500);
+        flashNum = random(999) + 500;
+        flash(flashNum);
+        flashOn = true;
+        firstFlashOn = true;
         break;
       case 4:
-        dualFlash(random(999) + 500);
+        dualFlashNum = random(999) + 500;
+        dualFlash(dualFlashNum);
+        dualFlashOn = true;
         break;
     }
-    yield();
   }
 }
 
@@ -289,51 +271,80 @@ void lightningStorm() {
 //Should have lightning go throughout the cloud (in theory, no idea if it will look good or not)
 void scrollFlash() {
   //scrolling
-  for (int i = 0; i < 30; i++) {
+  if (scrollFlashLoop0 < 30) {
+    //for (int i = 0; i < 30; i++) {
     for (int j = 0; j < 10; j++) {
-      pixels.setPixelColor(i * 10 + j, 255, 255, 255);
-      yield();
+      pixels.setPixelColor(scrollFlashLoop0 * 10 + j, 255, 255, 255);
     }
-    yield();
     pixels.show();
+    scrollFlashLoop0++;
+  } else {
+    scrollFlashOn = false;
   }
 }
 
 //Creats a single flash somehwere in the cloud with an int duration (in miliseconds)
 void flash(int duration) {
-  int randNum = random(2); //Random number 0-3 for use in deciding bolt location within cloud
-  int min, max = 0; //min = minumum light value that the bolt will strike, max = maximum light value bolt will end
+  //  int min, max = 0; //min = minumum light value that the bolt will strike, max = maximum light value bolt will end
   //Determines whether the bolt will be in front, mid, or back of light string
-  switch (randNum) {
-    case 0: //Bolt in front
-      min = random(24); //Starts between 0-24
-      max = random(49) + 75; //Ends between 100 - 124
-      break;
-    case 1: //Bolt in middle
-      min = random(49) + 125; //starts between 125 - 174
-      max = random(49) + 175; //ends between 175 - 224
-      break;
-    case 2:
-      min = random(49) + 200; //starts between 200 - 249
-      max = random(49) + 250; //ends between 250 - 299
-      break;
+  if (firstFlashOn == true) {
+    int randNum = random(2); //Random number 0-3 for use in deciding bolt location within cloud
+    switch (randNum) {
+      case 0: //Bolt in front
+        minFlash = random(24); //Starts between 0-24
+        maxFlash = random(49) + 75; //Ends between 100 - 124
+        break;
+      case 1: //Bolt in middle
+        minFlash = random(49) + 125; //starts between 125 - 174
+        maxFlash = random(49) + 175; //ends between 175 - 224
+        break;
+      case 2:
+        minFlash = random(49) + 200; //starts between 200 - 249
+        maxFlash = random(49) + 250; //ends between 250 - 299
+        break;
+    }
+    firstFlashOn = false;
   }
   //activates chosen lights
-  for (int i = min; i < max; i++) {
+  for (int i = minFlash; i < maxFlash; i++) {
     pixels.setPixelColor(i, 255, 255, 255);
-    yield();
   }
   pixels.show();
-  delay(50); //Hopefully creates a quick flicker effect
-  lightningReset();
-  delay(50);
-  for (int i = min; i < max; i++) {
-    pixels.setPixelColor(i, 255, 255, 255);
-    yield();
+
+  if (delayOneDone == false) {
+    unsigned long currentMillis = millis();
+    if (currentMillis - previousMillisArray[12] > interval5) {
+      previousMillisArray[12] = currentMillis;
+      lightningReset();
+      delayOneDone = true;
+    }
   }
-  delay(duration);
-  lightningReset(); //Resets lights to nothing at end of program
-  yield();
+
+  if (delayTwoDone == false && delayOneDone == true) {
+    unsigned long currentMillis = millis();
+    if (currentMillis - previousMillisArray[13] > interval5) {
+      previousMillisArray[13] = currentMillis;
+      delayTwoDone = true;
+    }
+  }
+
+  for (int i = minFlash; i < maxFlash; i++) {
+    pixels.setPixelColor(i, 255, 255, 255);
+  }
+
+  if (delayThreeDone == false && delayTwoDone == true && delayOneDone == true) {
+    unsigned long currentMillis = millis();
+    if (currentMillis - previousMillisArray[14] > duration) {
+      previousMillisArray[14] = currentMillis;
+      lightningReset(); //Resets lights to nothing at end of program
+      delayThreeDone = true;
+      flashOn = false;
+
+      delayOneDone = false;
+      delayTwoDone = false;
+      delayThreeDone = false;
+    }
+  }
 }
 
 //Creates 2 flashes of lightning, one in the front, one in the back
@@ -381,12 +392,10 @@ void dualFlash(int duration) {
 
 //Quick method to reset lights to nothing
 void lightningReset() {
-  for (int i = 0; i < 300; i++) {
+  for (int i = 0; i < NUMPIXELS; i++) {
     pixels.setPixelColor(i, 0, 0, 0);
-    yield();
   }
   pixels.show();
-  yield();
 }
 
 void rain() {
@@ -413,30 +422,13 @@ void rain() {
 void cloudy() {
   Serial.println("CLOUDY");
 
-  if (cloudyLoop0 < 255) {
-    unsigned long currentMillis = millis();
-    if (currentMillis - previousMillisArray[10] > interval4) {
-      previousMillisArray[10] = currentMillis;
-      for (int a = 0; a < NUMPIXELS; a++) {
-        pixels.setPixelColor(a, cloudyLoop0, cloudyLoop0, cloudyLoop0); //set LEDs a gray color
-      }
+  if (cloudyLoop0 < 125) {
+    for (int a = 0; a < NUMPIXELS; a++) {
+      pixels.setPixelColor(a, cloudyLoop0, cloudyLoop0, cloudyLoop0); //set LEDs a gray color
     }
     cloudyLoop0++;
-  } else if (cloudyLoop0 >= 255) {
+  } else if (cloudyLoop0 >= 125) {
     cloudyLoop0 = 100;
-  }
-
-  if (cloudyLoop1 > 99) {
-    unsigned long currentMillis = millis();
-    if (currentMillis - previousMillisArray[11] > interval4) {
-      previousMillisArray[11] = currentMillis;
-      for (int a = 0; a < NUMPIXELS; a++) {
-        pixels.setPixelColor(a, cloudyLoop1, cloudyLoop1, cloudyLoop1); //set LEDs a gray color
-      }
-    }
-    cloudyLoop1++;
-  } else if (cloudyLoop1 <= 99) {
-    cloudyLoop1 = 254;
   }
   pixels.show();
 }
