@@ -12,7 +12,7 @@
 #include "HTML.h"
 #include "OpenWeatherMapClient.h"
 
-#define VERSION "1.1"
+#define VERSION "1.2"
 #define HOSTNAME "IOT-WEATHER-CLOUD"
 #define CONFIG "/conf.txt"
 
@@ -92,6 +92,7 @@ void handleSnow();
 void handleRainbowCycles();
 void handleCloudy();
 void handleSunset();
+void handleSunrise();
 String parseCurrentMode();
 String parseCurrentPattern();
 int getID();
@@ -179,6 +180,7 @@ void setup() {
   server.on("/RainbowCycles", handleRainbowCycles);
   server.on("/Cloudy", handleCloudy);
   server.on("/Sunset", handleSunset);
+  server.on("/Sunrise", handleSunrise);
   server.onNotFound(handleRoot);
   server.begin();
   Serial.println("Server Started");
@@ -214,7 +216,7 @@ void loop() {
     currentWeatherID = weatherClient.getWeatherId().toInt();
     parseWeatherConditionID(currentWeatherID);
     Serial.println(currentWeatherID);
-  }  
+  }
 
   if (displayOn == true) {
     displayOn = false;
@@ -257,6 +259,8 @@ void loop() {
       cloudy();
     } else if (currentPattern == 8) {
       sunset();
+    } else if (currentPattern == 9) {
+      sunrise();
     }
   } else if (currentMode == 1) {
     clearClouds();
@@ -285,6 +289,9 @@ void loop() {
   } else if (currentMode == 9) {
     sunset();
     currentPattern = 8;
+  } else if (currentMode == 10) {
+    sunrise();
+    currentPattern = 9;
   }
 }
 
@@ -500,6 +507,11 @@ void handleSunset() {
   handleControl();
 }
 
+void handleSunrise() {
+  currentMode = 10;
+  handleControl();
+}
+
 String parseCurrentMode() {
   if (currentMode == 0) {
     return "Automatic";
@@ -521,6 +533,8 @@ String parseCurrentMode() {
     return "Cloudy";
   } else if (currentMode == 9) {
     return "Sunset";
+  } else if (currentMode == 10) {
+    return "Sunrise";
   } else {
     return "";
   }
@@ -548,6 +562,8 @@ String parseCurrentPattern() {
     temp = "Cloudy";
   } else if (currentPattern == 8) {
     temp = "Sunset";
+  } else if (currentPattern == 9) {
+    temp = "Sunrise";
   } else {
     temp = "";
   }
@@ -560,10 +576,13 @@ void parseWeatherConditionID(int i) {
   byte msg[1];
   if (i == 800) {
     Serial.printf("Clear Skies: %d\n", i);
-    if (randomseed == 0) {
+    int randomseed2 = random(3);
+    if (randomseed2 == 0) {
       currentPattern = 0;
-    } else {
+    } else if (randomseed2 == 1) {
       currentPattern = 1;
+    } else {
+      currentPattern = 9;
     }
     return;
   }
