@@ -209,13 +209,15 @@ void loop() {
 
   delay(1);
 
-  unsigned long currentMillis = millis();
-  if (currentMillis - previousMillis > interval) {
-    previousMillis = currentMillis;
-    weatherClient.updateWeather();
-    currentWeatherID = weatherClient.getWeatherId().toInt();
-    parseWeatherConditionID(currentWeatherID);
-    Serial.println(currentWeatherID);
+  if (currentMode == 0) {
+    unsigned long currentMillis = millis();
+    if (currentMillis - previousMillis > interval) {
+      previousMillis = currentMillis;
+      weatherClient.updateWeather();
+      currentWeatherID = weatherClient.getWeatherId().toInt();
+      parseWeatherConditionID(currentWeatherID);
+      Serial.println(currentWeatherID);
+    }
   }
 
   if (displayOn == true) {
