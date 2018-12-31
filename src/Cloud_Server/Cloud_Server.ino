@@ -12,7 +12,7 @@
 #include "HTML.h"
 #include "OpenWeatherMapClient.h"
 
-#define VERSION "1.2"
+#define VERSION "1.3"
 #define HOSTNAME "IOT-WEATHER-CLOUD"
 #define CONFIG "/conf.txt"
 

@@ -40,7 +40,6 @@ int sunsetLoop0 = 90;
 int seizureModeLoop0 = 0;
 int rainLoop0 = 0;
 int cloudyLoop0 = 100;
-int cloudyLoop1 = 254;
 int scrollFlashLoop0 = 0;
 int flashNum = 0;
 int dualFlashNum = 0;
@@ -422,13 +421,8 @@ void rain() {
 void cloudy() {
   Serial.println("CLOUDY");
 
-  if (cloudyLoop0 < 125) {
-    for (int a = 0; a < NUMPIXELS; a++) {
-      pixels.setPixelColor(a, cloudyLoop0, cloudyLoop0, cloudyLoop0); //set LEDs a gray color
-    }
-    cloudyLoop0++;
-  } else if (cloudyLoop0 >= 125) {
-    cloudyLoop0 = 100;
+  for (int a = 0; a < NUMPIXELS; a++) {
+    pixels.setPixelColor(a, cloudyLoop0, cloudyLoop0, cloudyLoop0); //set LEDs a gray color
   }
   pixels.show();
 }
