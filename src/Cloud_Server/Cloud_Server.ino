@@ -207,10 +207,11 @@ void loop() {
   server.handleClient();
   ArduinoOTA.handle();
 
+  unsigned long currentMillis = millis();
+
   delay(1);
 
   if (currentMode == 0) {
-    unsigned long currentMillis = millis();
     if (currentMillis - previousMillis > interval) {
       previousMillis = currentMillis;
       weatherClient.updateWeather();
