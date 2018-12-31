@@ -573,7 +573,6 @@ String parseCurrentPattern() {
 
 void parseWeatherConditionID(int i) {
   int randomseed = random(2);
-  byte msg[1];
   if (i == 800) {
     Serial.printf("Clear Skies: %d\n", i);
     int randomseed2 = random(3);
@@ -588,7 +587,6 @@ void parseWeatherConditionID(int i) {
         currentPattern = 8;
       }
     }
-    return;
   }
   else if (i == 962) {
     Serial.printf("Hurricane: %d\n", i);
