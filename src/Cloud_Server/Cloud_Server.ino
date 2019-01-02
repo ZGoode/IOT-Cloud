@@ -34,9 +34,8 @@ int currentPattern = -1;
 long previousMillis = 0;
 long previousMillisWeather = 0;
 long previousMillisDisplay = 0;
-long interval = 600000;
-long intervalWeather = 600000;
-long intervalDisplay = 10000;
+long interval = 60000;
+long intervalDisplay = 6000;
 int currentWeatherID = 0;
 boolean displayOn = true;
 
@@ -70,6 +69,8 @@ FrameCallback clockFrame[2];
 OpenWeatherMapClient weatherClient(WeatherApiKey, CityID, 1, IS_METRIC);
 
 ESP8266WebServer server(WEBSERVER_PORT);
+
+//fauxmoESP fauxmo;
 
 void handleSystemReset();
 void parseWeatherConditionID(int i);
@@ -211,9 +212,9 @@ void loop() {
 
   delay(1);
 
-  if (currentMode == 0) {
-    if (currentMillis - previousMillis > interval) {
-      previousMillis = currentMillis;
+  if (currentMillis - previousMillis > interval) {
+    previousMillis = currentMillis;
+    if (currentMode == 0) {
       weatherClient.updateWeather();
       currentWeatherID = weatherClient.getWeatherId().toInt();
       parseWeatherConditionID(currentWeatherID);
@@ -462,6 +463,12 @@ void handleControl() {
 
 void handleAutomatic() {
   currentMode = 0;
+
+  weatherClient.updateWeather();
+  currentWeatherID = weatherClient.getWeatherId().toInt();
+  parseWeatherConditionID(currentWeatherID);
+  Serial.println(currentWeatherID);
+
   handleControl();
 }
 
@@ -576,8 +583,9 @@ String parseCurrentPattern() {
 
 void parseWeatherConditionID(int i) {
   int randomseed = random(2);
-  if (i == 800) {
-    Serial.printf("Clear Skies: %d\n", i);
+  int temp = i;
+  if (temp == 800) {
+    Serial.printf("Clear Skies: %d\n", temp);
     int randomseed2 = random(3);
     if (randomseed2 == 0) {
       currentPattern = 0;
@@ -591,41 +599,41 @@ void parseWeatherConditionID(int i) {
       }
     }
   }
-  else if (i == 962) {
-    Serial.printf("Hurricane: %d\n", i);
+  else if (temp == 962) {
+    Serial.printf("Hurricane: %d\n", temp);
     if (randomseed == 1) {
       currentPattern = 3;
     } else {
       currentPattern = 4;
     }
   }
-  i = i / 100;
-  if (i == 2) {
-    Serial.printf("Thunderstorm: %d\n", i);
+  temp = temp / 100;
+  if (temp == 2) {
+    Serial.printf("Thunderstorm: %d\n", temp);
     if (randomseed == 1) {
       currentPattern = 3;
     } else {
       currentPattern = 4;
     }
   }
-  else if (i == 3) {
-    Serial.printf("Drizzle: %d\n", i);
+  else if (temp == 3) {
+    Serial.printf("Drizzle: %d\n", temp);
     currentPattern = 4;
   }
-  else if (i == 5) {
-    Serial.printf("Rain: %d\n", i);
+  else if (temp == 5) {
+    Serial.printf("Rain: %d\n", temp);
     currentPattern = 4;
   }
-  else if (i == 6) {
-    Serial.printf("Snow: %d\n", i);
+  else if (temp == 6) {
+    Serial.printf("Snow: %d\n", temp);
     currentPattern = 5;
   }
-  else if (i == 7) {
-    Serial.printf("Crap: %d\n", i);
+  else if (temp == 7) {
+    Serial.printf("Crap: %d\n", temp);
     currentPattern = 6;
   }
-  else if (i == 8) {
-    Serial.printf("Clouds: %d\n", i);
+  else if (temp == 8 && i != 800) {
+    Serial.printf("Clouds: %d\n", temp);
     currentPattern = 7;
   }
 }
