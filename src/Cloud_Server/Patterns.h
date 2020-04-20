@@ -400,7 +400,7 @@ void lightningReset() {
 void rain() {
   Serial.println("RAIN");
 
-  if (rainLoop0 < 15) {
+  if (rainLoop0 < 20) {
     unsigned long currentMillis = millis();
     if (currentMillis - previousMillisArray[9] > interval6) {
       previousMillisArray[9] = currentMillis;
@@ -413,7 +413,7 @@ void rain() {
       pixels.show();
     }
     rainLoop0++;
-  } else if (rainLoop0 >= 15) {
+  } else if (rainLoop0 >= 20) {
     rainLoop0 = 0;
   }
 }

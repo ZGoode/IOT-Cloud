@@ -343,6 +343,7 @@ void writeSettings() {
     Serial.println("Saving settings now...");
     f.println("www_username=" + String(www_username));
     f.println("www_password=" + String(www_password));
+    f.println("otapassword=" + String(OTA_Password));
     f.println("weatherKey=" + WeatherApiKey);
     f.println("CityID=" + String(CityID));
     f.println("isMetric=" + String(IS_METRIC));
@@ -404,6 +405,10 @@ void readSettings() {
     if (line.indexOf("isMetric=") >= 0) {
       IS_METRIC = line.substring(line.lastIndexOf("isMetric=") + 9).toInt();
       Serial.println("IS_METRIC=" + String(IS_METRIC));
+    }
+    if (line.indexOf("otapassword=") >= 0) {
+      hour24 = line.substring(line.lastIndexOf("otapassword=") + 12).toInt();
+      Serial.println("otapassword=" + String(OTA_Password));
     }
   }
   fr.close();
